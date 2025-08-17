@@ -1,6 +1,8 @@
 const express = require('express');
 const multer = require('multer');
-const { saveMaidData, getData } = require('../controllers/MaidController');
+const { saveMaidData, getAllMaids,updateMaidStatus } = require('../controllers/MaidController');
+const Maid = require('../models/MaidModel'); 
+
 
 const router = express.Router();
 
@@ -22,6 +24,35 @@ router.post(
   saveMaidData
 );
 
-router.get('/maid/:id', getData);
+router.get('/maids', getAllMaids);
+router.patch('/maids/:id', updateMaidStatus);
+
+router.get('/maids/:id', async (req, res) => {
+  try {
+    const maid = await Maid.findById(req.params.id);
+    if (!maid) return res.status(404).json({ message: 'Maid not found' });
+    res.json(maid);
+  } catch (err) {
+    console.error(err);  // log the actual error to see details
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+router.get('/maids/by-email/:email', async (req, res) => {
+  try {
+    const maid = await Maid.findOne({ email: req.params.email });
+
+    if (!maid) {
+      return res.status(404).json({ message: 'Maid not found' });
+    }
+
+    res.status(200).json(maid);
+  } catch (err) {
+    console.error("Error fetching maid by email:", err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 
 module.exports = router;

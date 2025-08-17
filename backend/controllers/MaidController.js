@@ -22,14 +22,40 @@ const saveMaidData = async (req, res) => {
   }
 };
 
-const getData = async (req, res) => {
+// Get all maids
+const getAllMaids = async (req, res) => {
   try {
-    const maid = await Maid.findById(req.params.id);
-    return res.status(200).json(maid);
+    const maids = await Maid.find(); // ✅ Find ALL maids
+    return res.status(200).json(maids);
   } catch (err) {
     console.error('Fetch error:', err);
-    return res.status(500).json({ message: 'Server error fetching data' });
+    return res.status(500).json({ message: 'Server error fetching maids' });
   }
 };
 
-module.exports = { saveMaidData, getData };
+//updated maid status
+
+const updateMaidStatus = async (req, res) => {
+  try {
+    const maidId = req.params.id;
+    const { status } = req.body;
+
+    const updatedMaid = await Maid.findByIdAndUpdate(
+      maidId,
+      { status },
+      { new: true }
+    );
+
+    if (!updatedMaid) {
+      return res.status(404).json({ message: 'Maid not found' });
+    }
+
+    res.status(200).json({ message: 'Maid status updated', maid: updatedMaid });
+  } catch (error) {
+    console.error('Update error:', error);
+    res.status(500).json({ message: 'Server error updating maid status' });
+  }
+};
+
+
+module.exports = { saveMaidData,getAllMaids,updateMaidStatus };

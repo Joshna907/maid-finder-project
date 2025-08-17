@@ -5,6 +5,7 @@ const MaidSchema = new mongoose.Schema({
   phone: String,
   email: String,
   photo: String,
+  gender:String,
   serviceType: String,
   location: String,
   workingHours: String,
