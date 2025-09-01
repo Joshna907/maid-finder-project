@@ -1,26 +1,23 @@
-const { MongoClient } = require("mongodb");
-const uri = "mongodb+srv://joshnawaikar:IMccHlSSPzNpF4Qd@cluster0.ogwgz.mongodb.net/maidfinder?retryWrites=true&w=majority&appName=Cluster0";
+const express = require("express");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
-const client = new MongoClient(uri);
+const app = express();
+const PORT = process.env.PORT || 2002;
 
-async function run() {
-  try {
-    await client.connect();
-    console.log("✅ Connected to MongoDB Atlas");
+// Middleware
+app.use(express.json());
 
-    const db = client.db("testdb");
-    const collection = db.collection("users");
+// Example route
+app.get("/", (req, res) => {
+  res.send("Server is running ✅");
+});
 
-    const result = await collection.insertOne({ name: "Joshna", role: "Developer" });
-    console.log("Inserted:", result.insertedId);
-
-    const users = await collection.find().toArray();
-    console.log("Users:", users);
-  } catch (err) {
-    console.error("❌ Error:", err);
-  } finally {
-    await client.close();
-  }
-}
-
-run();
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URL, { dbName: "maidfinder" })
+  .then(() => {
+    console.log("✅ MongoDB connected");
+    // Start server only after DB connects
+    app.listen(PORT, () => console.log(`🚀 Server started on port ${PORT}`));
+  })
+  .catch(err => console.error("❌ MongoDB connection error:", err));
