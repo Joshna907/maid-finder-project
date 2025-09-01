@@ -1,42 +1,34 @@
-require('dotenv').config();
-const express = require('express');
-const path = require('path');
-const mongoose = require('mongoose');
-const cors = require('cors');
+const { MongoClient } = require("mongodb");
 
-// Import routes
-const maidRoute = require('./routes/MaidRoutes');
-const userRoutes = require('./routes/userRoutes');
-const contactRoutes = require("./routes/ContactRoutes");
+// replace <db_password> with your actual password
+mongoose.connect("mongodb+srv://joshnawaikar:MyRealPassword@cluster0.ogwgz.mongodb.net/maidfinder?retryWrites=true&w=majority")
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.error(err));
+  
+const client = new MongoClient(uri);
 
-const app = express();
-const PORT = process.env.PORT || 2002;
+async function run() {
+  try {
+    await client.connect();
+    console.log("✅ Connected to MongoDB Atlas");
 
-// CORS: allow your React app at port 5173
-app.use(cors({
-  origin: 'http://localhost:5173',
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Content-Type'],
-}));
+    // Example: create/use a DB and collection
+    const db = client.db("testdb"); 
+    const collection = db.collection("users");
 
-// ✅ Serve static files from 'uploads' inside backend
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+    // Insert a sample document
+    const result = await collection.insertOne({ name: "Joshna", role: "Developer" });
+    console.log("Inserted:", result.insertedId);
 
-// Body parsers (for JSON & urlencoded—multer handles files)
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+    // Fetch documents
+    const users = await collection.find().toArray();
+    console.log("Users:", users);
 
-// Use your routes
-app.use('/api', maidRoute);
-app.use('/api/users', userRoutes);
-app.use('/api' , contactRoutes);
+  } catch (err) {
+    console.error("❌ Error:", err);
+  } finally {
+    await client.close();
+  }
+}
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URL, {
-  dbName: 'Maid-Finder',
-})
-.then(() => console.log('MongoDB connected successfully'))
-.catch(err => console.error('MongoDB connection error:', err));
-
-// Start server
-app.listen(PORT, () => console.log(`Server started at port ${PORT}`));
+run();
