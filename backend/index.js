@@ -1,3 +1,4 @@
+const mongoose = require("mongoose"); 
 const { MongoClient } = require("mongodb");
 
 // replace <db_password> with your actual password
