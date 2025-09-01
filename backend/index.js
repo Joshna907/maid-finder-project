@@ -6,7 +6,7 @@ mongoose.connect("mongodb+srv://joshnawaikar:Babyjosh@034@cluster0.ogwgz.mongodb
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.error(err));
 
-const client = new MongoClient(uri);
+const client = new MongoClient(MONGO_URL);
 
 async function run() {
   try {
