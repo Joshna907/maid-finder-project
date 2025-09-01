@@ -1,10 +1,10 @@
 const { MongoClient } = require("mongodb");
 
 // replace <db_password> with your actual password
-mongoose.connect("mongodb+srv://joshnawaikar:MyRealPassword@cluster0.ogwgz.mongodb.net/maidfinder?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://joshnawaikar:Babyjosh@034@cluster0.ogwgz.mongodb.net/maidfinder?retryWrites=true&w=majority")
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.error(err));
-  
+
 const client = new MongoClient(uri);
 
 async function run() {
