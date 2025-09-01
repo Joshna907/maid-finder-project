@@ -20,7 +20,7 @@ const SearchPage = () => {
    useEffect(() => {
   const fetchMaids = async () => {
     try {
-      const res = await fetch('http://localhost:2002/api/maids');
+      const res = await fetch('https://maidfinder-backend.onrender.com/api/maids');
       const data = await res.json();
       setMaids(Array.isArray(data) ? data : []);
     } catch (err) {

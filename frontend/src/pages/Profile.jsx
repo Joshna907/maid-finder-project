@@ -27,9 +27,9 @@ const Profile = () => {
     try {
       let response;
       if (user.role === 'maid') {
-        response = await fetch(`http://localhost:2002/api/maids/by-email/${user.email}`);
+        response = await fetch(`https://maidfinder-backend.onrender.com/maids/by-email/${user.email}`);
       } else {
-        response = await fetch(`http://localhost:2002/api/users/profile/${user._id}`);
+        response = await fetch(`https://maidfinder-backend.onrender.com/api/users/profile/${user._id}`);
       }
       const data = await response.json();
       console.log("Fetched profile data:", data);
@@ -37,7 +37,7 @@ const Profile = () => {
       if (user.role === 'maid') {
         setMaidData(data);
         if (data.photo) {
-          setProfileImage(`http://localhost:2002/${data.photo}`);
+          setProfileImage(`https://maidfinder-backend.onrender.com/${data.photo}`);
         }
       } else {
         setUserData(data);
